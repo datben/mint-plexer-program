@@ -5,4 +5,7 @@ use anchor_lang::prelude::*;
 pub enum MintPlexerError {
     #[msg("")]
     AccessDenied,
+
+    #[msg("")]
+    NotEnoughLiquidity,
 }
