@@ -32,11 +32,7 @@ describe("mint-plexer", () => {
     programId
   );
 
-  const borgATA = associatedAddress({
-    mint: borg.publicKey,
-    owner: mintPlexer[0],
-  });
-
+  let wborgATA: anchor.web3.PublicKey;
   let wBorg: anchor.web3.PublicKey;
 
   it("Initialize mintPlexer", async () => {
@@ -73,19 +69,24 @@ describe("mint-plexer", () => {
       9
     );
 
+    wborgATA = associatedAddress({
+      mint: wBorg,
+      owner: mintPlexer[0],
+    });
+
     const tx = await program.methods
       .addPair()
       .accounts({
-        newPair: wBorg,
-        mainMint: borg.publicKey,
         mintPlexer: mintPlexer[0],
         authority: wallet.publicKey,
-        newPairTokenAccount: borgATA,
-        associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+        mainMint: borg.publicKey,
+        newPair: wBorg,
+        newPairTokenAccount: wborgATA,
         tokenProgram: spl.TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
         systemProgram: SystemProgram.programId,
       })
-      .rpc();
+      .rpc({ skipPreflight: true });
 
     console.log("add pair :", tx);
   });
